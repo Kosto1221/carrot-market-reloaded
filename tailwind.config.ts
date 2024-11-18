@@ -13,6 +13,14 @@ export default {
     //     foreground: "var(--foreground)",
     //   },
     // },
+    extend: {
+      margin: {
+        "ma-tomato": "120px",
+      },
+      borderRadius: {
+        "sexy-name": "11.11px",
+      },
+    },
   },
   plugins: [],
 } satisfies Config;
