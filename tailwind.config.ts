@@ -15,7 +15,7 @@ export default {
     // },
     extend: {
       margin: {
-        "ma-tomato": "120px",
+        tomato: "120px",
       },
       borderRadius: {
         "sexy-name": "11.11px",
