@@ -1,12 +1,15 @@
 "use server";
+import bcrypt from "bcrypt";
 import {
   PASSWORD_MIN_LENGTH,
   PASSWORD_REGEX,
   PASSWORD_REGEX_ERROR,
 } from "@/lib/constants";
-import { z } from "zod";
 import db from "@/lib/db";
-import bcrypt from "bcrypt";
+import { z } from "zod";
+import { getIronSession } from "iron-session";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 const checkUsername = (username: string) => !username.includes("potato");
 
@@ -58,17 +61,17 @@ const formSchema = z
       .trim()
       // .transform((username) => `🔥 ${username} 🔥`)
       .refine(checkUsername, "No potatoes allowed!")
-      .refine(checkUniqueUsername, "The username is already taken"),
+      .refine(checkUniqueUsername, "This username is already taken"),
     email: z
       .string()
       .email()
       .toLowerCase()
       .refine(
         checkUniqueEmail,
-        "There is an account already registered with that email"
+        "There is an account already registered with that email."
       ),
     password: z.string().min(PASSWORD_MIN_LENGTH),
-    // .regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
+    //.regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
     confirm_password: z.string().min(PASSWORD_MIN_LENGTH),
   })
   .refine(checkPasswords, {
@@ -98,6 +101,14 @@ export async function createAccount(prevState: any, formData: FormData) {
         id: true,
       },
     });
-    console.log(user);
+    const cookieStore = await cookies();
+    const cookie = await getIronSession(cookieStore, {
+      cookieName: "delicious-karrot",
+      password: process.env.COOKIE_PASSWORD!,
+    });
+    //@ts-ignore
+    cookie.id = user.id;
+    await cookie.save();
+    redirect("/profile");
   }
 }
