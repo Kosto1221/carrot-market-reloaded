@@ -6,6 +6,7 @@ import {
 } from "@/lib/constants";
 import { z } from "zod";
 import db from "@/lib/db";
+import bcrypt from "bcrypt";
 
 const checkUsername = (username: string) => !username.includes("potato");
 
@@ -84,8 +85,19 @@ export async function createAccount(prevState: any, formData: FormData) {
   };
   const result = await formSchema.safeParseAsync(data);
   if (!result.success) {
-    console.log(result.error.flatten());
     return result.error.flatten();
   } else {
+    const hashedPassword = await bcrypt.hash(result.data.password, 12);
+    const user = await db.user.create({
+      data: {
+        username: result.data.username,
+        email: result.data.email,
+        password: hashedPassword,
+      },
+      select: {
+        id: true,
+      },
+    });
+    console.log(user);
   }
 }
