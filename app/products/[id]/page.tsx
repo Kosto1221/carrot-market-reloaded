@@ -1,3 +1,5 @@
+// code challenge
+
 import { notFound } from "next/navigation";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
