@@ -1,4 +1,4 @@
-export function FormatToTimeAgo(date: string): string {
+export function formatToTimeAgo(date: string): string {
   const dayInMs = 1000 * 60 * 60 * 24;
   const time = new Date(date).getTime();
   const now = new Date().getTime();

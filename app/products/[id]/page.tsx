@@ -1,13 +1,10 @@
-// code challenge
-
-import { notFound } from "next/navigation";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
-import { UserIcon } from "@heroicons/react/24/solid";
-import Link from "next/link";
 import { formatToWon } from "@/lib/utils";
+import { UserIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
-import { redirect } from "next/navigation";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
 async function getIsOwner(userId: number) {
   const session = await getSession();
@@ -48,35 +45,24 @@ export default async function ProductDetail({
     return notFound();
   }
   const isOwner = await getIsOwner(product.userId);
-  const deleteProduct = async (formData: FormData) => {
-    "use server";
-    const id = formData.get("id");
-    await db.product.delete({
-      where: {
-        id: Number(id),
-      },
-    });
-    redirect("/products");
-  };
-
   return (
     <div>
       <div className="relative aspect-square">
         <Image
-          fill
-          src={product.photo}
-          alt={product.title}
           className="object-cover"
+          fill
+          src={`${product.photo}/public`}
+          alt={product.title}
         />
       </div>
       <div className="p-5 flex items-center gap-3 border-b border-neutral-700">
-        <div className="size-10 rounded-full overflow-hidden">
+        <div className="size-10 overflow-hidden rounded-full">
           {product.user.avatar !== null ? (
             <Image
               src={product.user.avatar}
-              alt={product.user.username}
               width={40}
               height={40}
+              alt={product.user.username}
             />
           ) : (
             <UserIcon />
@@ -95,15 +81,9 @@ export default async function ProductDetail({
           {formatToWon(product.price)}원
         </span>
         {isOwner ? (
-          <form action={deleteProduct}>
-            <input type="hidden" name="id" value={product.id} />
-            <button
-              type="submit"
-              className="bg-red-500 px-5 py-2.5 rounded-md text-white font-semibold"
-            >
-              Delete product
-            </button>
-          </form>
+          <button className="bg-red-500 px-5 py-2.5 rounded-md text-white font-semibold">
+            Delete product
+          </button>
         ) : null}
         <Link
           className="bg-orange-500 px-5 py-2.5 rounded-md text-white font-semibold"

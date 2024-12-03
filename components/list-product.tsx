@@ -1,6 +1,6 @@
-import Link from "next/link";
+import { formatToTimeAgo, formatToWon } from "@/lib/utils";
 import Image from "next/image";
-import { FormatToTimeAgo, formatToWon } from "@/lib/utils";
+import Link from "next/link";
 
 interface ListProductProps {
   title: string;
@@ -22,16 +22,15 @@ export default function ListProduct({
       <div className="relative size-28 rounded-md overflow-hidden">
         <Image
           fill
-          src={photo}
-          alt={title}
-          quality={100}
+          src={`${photo}/avatar`}
           className="object-cover"
+          alt={title}
         />
       </div>
       <div className="flex flex-col gap-1 *:text-white">
         <span className="text-lg">{title}</span>
         <span className="text-sm text-neutral-500">
-          {FormatToTimeAgo(created_at.toString())}
+          {formatToTimeAgo(created_at.toString())}
         </span>
         <span className="text-lg font-semibold">{formatToWon(price)}원</span>
       </div>
