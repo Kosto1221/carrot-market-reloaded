@@ -1,5 +1,4 @@
 import db from "@/lib/db";
-import ListProduct from "@/components/list-product";
 import ProductList from "@/components/product-list";
 import { Prisma } from "@prisma/client";
 import Link from "next/link";
