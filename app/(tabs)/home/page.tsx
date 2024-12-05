@@ -5,7 +5,9 @@ import Link from "next/link";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import { unstable_cache as nextCache } from "next/cache";
 
-const getCachedProducts = nextCache(getInitialProducts, ["home-products"]);
+const getCachedProducts = nextCache(getInitialProducts, ["home-products"], {
+  revalidate: 60,
+});
 
 async function getInitialProducts() {
   const products = await db.product.findMany({
